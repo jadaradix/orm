@@ -148,10 +148,27 @@ abstraction.close = function close (callback) {
   );
 };
 
-abstraction.select = function select (table, map, callback) {
+abstraction.select = function select (arg1, arg2, arg3, arg4) {
+  let databaseReference;
+  let table;
+  let map;
+  let callback;
+  if (arguments.length === 4) {
+    // 4 arguments: database, table, map, callback
+    databaseReference = databases[arg1].thing;
+    table = arg2;
+    map = arg3;
+    callback = arg4;
+  } else {
+    // 3 arguments: table, map, callback
+    databaseReference = currentDatabaseThing;
+    table = arg1;
+    map = arg2;
+    callback = arg3;
+  }
   let sql = "SELECT * FROM '" + table + "'" + whereWork(map) + ";";
   if (debug.getEnabled()) console.log(sql);
-  return currentDatabaseThing.all(sql, function (err, rows) {
+  return databaseReference.all(sql, function (err, rows) {
     if (err) return objectError("abstraction.select:" + err.toString(), callback);
     return callback(false, rows);
   });
