@@ -22,6 +22,8 @@ const sqlite3 = require("sqlite3");
 const ueber = require("ueber");
 const _s = require("underscore.string");
 
+const DIR = process.env.ORM_DIR || __dirname;
+
 let databases = {};
 let defaultDatabaseKey = null;
 let currentDatabaseThing = null;
@@ -111,7 +113,7 @@ abstraction.open = function open (lDatabases, lDatabaseKey, callback) {
   let databaseOpenFunctions = Object.keys(lDatabases).map((databaseKey) => {
     return function (callback) {
       databases[databaseKey].thing = new sqlite3.Database(
-        path.resolve(__dirname, "db-" + databases[databaseKey].name + ".db"),
+        path.resolve(DIR, "db-" + databases[databaseKey].name + ".db"),
         sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE,
         callback
       );
