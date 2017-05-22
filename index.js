@@ -184,6 +184,16 @@ abstraction.selectAdvanced = function selectAdvanced (database, table, map, limi
   });
 };
 
+abstraction.howMany = function howMany (database, table, map, callback) {
+  let sql = "SELECT COUNT(*) FROM '" + table + "'" + whereWork(map) + ";";
+  if (debug.getEnabled()) console.log(sql);
+  return databases[database].thing.all(sql, function (err, howMany) {
+    if (err) return objectError("abstraction.howMany:" + err.toString(), callback);
+    howMany = howMany.shift()
+    return callback(false, howMany[Object.keys(howMany)[0]]);
+  });
+}
+
 abstraction.insert = function insert (database, table, map, callback) {
   let sql = "INSERT INTO '" + table + "' (" + parameterWork(Object.keys(map)) + ") VALUES (" + parameterWork(ueber.getObjectValues(map), true) + ")" + ";";
   if (debug.getEnabled()) console.log(sql);
