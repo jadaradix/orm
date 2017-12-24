@@ -82,7 +82,7 @@ const getLastIdAssignableObject = function getLastIdAssignableObject (database, 
   return databases[database].thing.get(sql, function (err, result) {
     if (err) return objectError("getLastIdAssignableObject failed selecting seq FROM sqlite_sequence for table '" + table + "'.", callback);
     if (result === undefined) {
-      return objectError("getLastIdAssignableObject failed because result was undefined. There is probably not an 'auto increment' column on table '" + table + "'.", callback);
+      return callback(false)
     }
     return callback(false, {
       "lastInsertId": result.seq
