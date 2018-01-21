@@ -82,11 +82,10 @@ const getLastIdAssignableObject = function getLastIdAssignableObject (database, 
   return databases[database].thing.get(sql, function (err, result) {
     if (err) return objectError("getLastIdAssignableObject failed selecting seq FROM sqlite_sequence for table '" + table + "'.", callback);
     if (result === undefined) {
-      return callback(false)
+      return callback(false, {})
+    } else {
+      return callback(false, {"lastInsertId": result.seq});
     }
-    return callback(false, {
-      "lastInsertId": result.seq
-    });
   });
 };
 
