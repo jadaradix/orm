@@ -35,6 +35,6 @@ new Promise((resolve, reject) => {
     })
   })
   .catch(() => {
-    console.error('could not open adapter connection')
+    console.error('could not open adapter connection', err)
     return process.exit(1)
   })
