@@ -18,8 +18,8 @@
   "homepage": "https://github.com/jadaradix/sqlite-adapter#readme",
   "dependencies": {
     "async": "2.6.0",
-    "sqlite3": "3.1.13",
-    "underscore.string": "3.3.4",
-    "ueber": "jadaradix/ueber"
+    "sqlite3": "*",
+    "ueber": "jadaradix/ueber",
+    "underscore.string": "3.3.4"
   }
 }
