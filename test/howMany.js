@@ -27,7 +27,7 @@ new Promise((resolve, reject) => {
       console.log(`inserted: ${JSON.stringify(inserted)}`)
       adapter.howMany('core', 'Cats', {}, (err, howMany) => {
         if (err) {
-          throw new Error('could not count')
+          throw new Error('could not howMany')
         }
         console.log(`count: ${howMany}`)
         return process.exit(0)

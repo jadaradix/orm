@@ -4,7 +4,7 @@
   "description": "A terrible abstraction above sqlite to persist data.",
   "main": "index.js",
   "scripts": {
-    "test": "rm db-core.db; cp db-core-original.db db-core.db; node test/howMany.js"
+    "test": "rm db-core.db; cp db-core-original.db db-core.db; node test/howMany.js; node test/selectAdvanced.js"
   },
   "repository": {
     "type": "git",
