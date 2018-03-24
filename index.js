@@ -80,8 +80,7 @@ const getLastIdAssignableObject = function getLastIdAssignableObject (database, 
   let sql = "SELECT seq FROM sqlite_sequence WHERE name='" + table + "';";
   if (debug.getEnabled()) console.log(sql);
   return databases[database].thing.get(sql, function (err, result) {
-    if (err) return objectError("getLastIdAssignableObject failed selecting seq FROM sqlite_sequence for table '" + table + "'.", callback);
-    if (result === undefined) {
+    if (err || result === undefined) {
       return callback(false, {})
     } else {
       return callback(false, {"lastInsertId": result.seq});
@@ -90,7 +89,6 @@ const getLastIdAssignableObject = function getLastIdAssignableObject (database, 
 };
 
 abstraction.temporarySetDatabase = function temporarySetDatabase (lDatabaseKey) {
-  console.warn('this is the correct dependency...');
   if (debug.getEnabled()) console.log("temporarySetDatabase called; switching to " + lDatabaseKey);
   if (lDatabaseKey === null) {
     currentDatabaseThing = null;
@@ -201,7 +199,6 @@ abstraction.insert = function insert (database, table, map, callback) {
   return databases[database].thing.run(sql, values, function (err) {
     if (err) return objectError("abstraction.insert:" + err.toString(), callback);
     return getLastIdAssignableObject(database, table, function (err, assignableObject) {
-      if (err) return callback(err);
       return callback(
         false,
         Object.assign({}, map, assignableObject)
