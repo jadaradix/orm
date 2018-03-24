@@ -20,11 +20,11 @@ new Promise((resolve, reject) => {
   })
 })
   .then(() => {
-    adapter.selectAdvanced('core', 'Cats', {'name': 'Stinky'}, 1, (err, results) => {
+    adapter.selectAdvancedOr('core', 'Cats', {'name': ['Stinky', 'Smelly']}, 2, (err, results) => {
       if (err) {
-        throw new Error('could not selectAdvanced', err)
+        throw new Error('could not selectAdvancedOr', err)
       }
-      console.log(`result[0]: ${JSON.stringify(results[0])}`)
+      console.log(`results: ${JSON.stringify(results)}`)
       return process.exit(0)
     })
   })

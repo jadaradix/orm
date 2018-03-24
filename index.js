@@ -57,23 +57,29 @@ const updateWork = function updateWork (map, preparedMode) {
   }
 };
 
-const whereWork = function whereWork (map) {
+const whereWork = function whereWork (map, orMode) {
+  let conditions = [];
   Object.keys(map).forEach((mapKey) => {
-    if (map[mapKey] === undefined) delete map[mapKey];
+    if (map[mapKey] === undefined) return;
+    if (Array.isArray(map[mapKey])) {
+      conditions = [...conditions, ...map[mapKey].map(mapKeyKey => [mapKey, mapKeyKey])]
+    } else {
+      conditions = [...conditions, [mapKey, map[mapKey]]]
+    }
   });
-  if (Object.keys(map).length === 0) return "";
+  if (conditions.length === 0) return "";
   return [
     " WHERE ",
-    Object.keys(map).map(function (key) {
-      let v = (map[key] === null ? 'IS NULL' : map[key].toString());
+    conditions.map(function (condition) {
+      let v = (condition[1] === null ? 'IS NULL' : condition[1].toString());
       let string = _s.replaceAll(v, "'", "''");
       return ((
         (v.indexOf("IN") === 0) ||
         (v.indexOf("NOT IN") === 0) ||
         (v.indexOf("IS NULL") === 0) ||
         (v.indexOf("IS NOT NULL") === 0)
-      ) ? (key + " " + v) : (key + "=" + (typeof map[key] === "string" ? "'" + string + "'" : string)));
-    }).join(" AND ")
+      ) ? (condition[0] + " " + v) : (condition[0] + "=" + (typeof condition[1] === "string" ? "'" + string + "'" : string)));
+    }).join(orMode ? " OR " : " AND ")
   ].join("");
 };
 
@@ -175,10 +181,20 @@ abstraction.select = function select (arg1, arg2, arg3, arg4) {
 
 abstraction.selectAdvanced = function selectAdvanced (database, table, map, limit, callback) {
   let limitBit = (limit !== undefined && limit !== null ? " LIMIT " + limit.toString() : "");
-  let sql = "SELECT * FROM '" + table + "'" + whereWork(map) + limitBit + ";";
+  let sql = "SELECT * FROM '" + table + "'" + whereWork(map, false) + limitBit + ";";
   if (debug.getEnabled()) console.log(sql);
   return databases[database].thing.all(sql, function (err, rows) {
     if (err) return objectError("abstraction.selectAdvanced:" + err.toString(), callback);
+    return callback(false, rows);
+  });
+};
+
+abstraction.selectAdvancedOr = function selectAdvancedOr (database, table, map, limit, callback) {
+  let limitBit = (limit !== undefined && limit !== null ? " LIMIT " + limit.toString() : "");
+  let sql = "SELECT * FROM '" + table + "'" + whereWork(map, true) + limitBit + ";";
+  if (debug.getEnabled()) console.log(sql);
+  return databases[database].thing.all(sql, function (err, rows) {
+    if (err) return objectError("abstraction.selectAdvancedOr:" + err.toString(), callback);
     return callback(false, rows);
   });
 };
