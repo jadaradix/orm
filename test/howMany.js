@@ -1,6 +1,6 @@
 'use strict';
 
-const adapter = require('./index')
+const adapter = require('../index')
 
 const DATABASES = {
   core: {
@@ -20,16 +20,16 @@ new Promise((resolve, reject) => {
   })
 })
   .then(() => {
-    adapter.insert('core', 'Dogs', { 'name': 'Woofer' }, (err, dog) => {
+    adapter.insert('core', 'Cats', { 'name': 'Stuffy' }, (err, inserted) => {
       if (err) {
-        throw new Error('could not insert dog')
+        throw new Error('could not insert')
       }
-      console.log(`inserted: ${JSON.stringify(dog)}`)
-      adapter.howMany('core', 'Dogs', {}, (err, howMany) => {
+      console.log(`inserted: ${JSON.stringify(inserted)}`)
+      adapter.howMany('core', 'Cats', {}, (err, howMany) => {
         if (err) {
-          throw new Error('could not count dogs')
+          throw new Error('could not count')
         }
-        console.log(`dogs: ${howMany}`)
+        console.log(`count: ${howMany}`)
         return process.exit(0)
       })
     })
