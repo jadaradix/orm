@@ -62,18 +62,19 @@ const whereWork = function whereWork (map) {
     if (map[mapKey] === undefined) delete map[mapKey];
   });
   if (Object.keys(map).length === 0) return "";
-  Object.keys(map)
-  return " WHERE " +
-  Object.keys(map).map(function (key) {
-    let v = (map[key] === null ? 'IS NULL' : map[key].toString());
-    let string = _s.replaceAll(v, "'", "''");
-    return ((
-      (v.indexOf("IN") === 0) ||
-      (v.indexOf("NOT IN") === 0) ||
-      (v.indexOf("IS NULL") === 0) ||
-      (v.indexOf("IS NOT NULL") === 0)
-    ) ? (key + " " + v) : (key + "=" + (typeof map[key] === "string" ? "'" + string + "'" : string)));
-  }).join(" AND ");
+  return [
+    " WHERE ",
+    Object.keys(map).map(function (key) {
+      let v = (map[key] === null ? 'IS NULL' : map[key].toString());
+      let string = _s.replaceAll(v, "'", "''");
+      return ((
+        (v.indexOf("IN") === 0) ||
+        (v.indexOf("NOT IN") === 0) ||
+        (v.indexOf("IS NULL") === 0) ||
+        (v.indexOf("IS NOT NULL") === 0)
+      ) ? (key + " " + v) : (key + "=" + (typeof map[key] === "string" ? "'" + string + "'" : string)));
+    }).join(" AND ")
+  ].join("");
 };
 
 const getLastIdAssignableObject = function getLastIdAssignableObject (database, table, callback) {
