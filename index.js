@@ -16,11 +16,12 @@ const debug = {
   }
 };
 
-const async = require("async");
-const path = require("path");
-const sqlite3 = require("sqlite3");
-const ueber = require("ueber");
-const _s = require("underscore.string");
+const async = require("async")
+const path = require("path")
+const sqlite3 = require("sqlite3")
+const ueber = require("ueber")
+const _s = require("underscore.string")
+const objectError = require("./abstractions/objectError")
 
 const DIR = process.env.ORM_DIR || __dirname;
 
@@ -29,14 +30,6 @@ let defaultDatabaseKey = null;
 let currentDatabaseThing = null;
 
 const abstraction = {};
-module.exports = abstraction;
-
-const objectError = function objectError (err, callback) {
-  return callback({
-    "statusCode": 500,
-    "statusMessage": err.toString()
-  });
-};
 
 const parameterWork = function parameterWork (parameters, preparedMode) {
   preparedMode = (preparedMode === undefined ? false : preparedMode);
@@ -243,3 +236,5 @@ abstraction.delete = function (database, table, map, callback) {
     return callback(false);
   });
 };
+
+module.exports = abstraction;
